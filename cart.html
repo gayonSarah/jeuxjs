@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cart | JS</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma-rtl.min.css"
+    />
+  </head>
+  <body>
+    <main>
+      <section id="products" class="section"></section>
+      <section class="section">
+        <nav id="cart" class="panel">
+          <p class="panel-heading">
+            Cart | JS
+          </p>
+          <div class="panel-block">
+            <button id="order" class="button is-link is-outlined is-fullwidth">
+              Order
+            </button>
+          </div>
+        </nav>
+      </section>
+    </main>
+    <script>
+      const products = [
+        { title: "Savon", price: 100 },
+        { title: "Shampoing", price: 200 },
+      ];
+      const productsContainer = document.getElementById("products");
+      const cartContainer = document.getElementById("cart");
+      const orderButton = document.getElementById("order");
+      const getTotal = () => {
+        const items = document.querySelectorAll(".item");
+        let total = 0;
+        Array.from(items).forEach((item) => {
+          total +=
+            parseInt(item.dataset.price) * parseInt(item.dataset.quantity);
+        });
+        return total;
+      };
+      products.forEach((product) => {
+        const node = document.createElement("button");
+        node.classList.add("button", "is-primary");
+        node.innerHTML = product.title + " " + product.price;
+        productsContainer.appendChild(node);
+        const br = document.createElement("br");
+        productsContainer.appendChild(br);
+        node.onclick = () => {
+          let item = document.querySelector(
+            "a[data-title=" + product.title + "]"
+          );
+
+          if (item) {
+            item.setAttribute(
+              "data-quantity",
+              parseInt(item.dataset.quantity) + 1
+            );
+            item.firstElementChild.innerHTML =
+              product.title + " " + product.price + " " + item.dataset.quantity;
+          } else {
+            item = document.createElement("a");
+            item.classList.add("panel-block", "item");
+            item.setAttribute("data-title", product.title);
+            item.setAttribute("data-price", product.price);
+            item.setAttribute("data-quantity", 1);
+            const text = document.createElement("span");
+            text.innerHTML =
+              product.title + " " + product.price + " " + item.dataset.quantity;
+            item.appendChild(text);
+            const addProduct = document.createElement("button");
+            addProduct.innerHTML = "add";
+            item.appendChild(addProduct);
+            const del = document.createElement("button");
+            del.innerHTML = "Delete";
+            item.appendChild(del);
+            cartContainer.insertBefore(item, orderButton.parentNode);
+
+            addProduct.onclick = () => {
+              if (parseInt(item.dataset.quantity) > 1) {
+                item.setAttribute(
+                  "data-quantity",
+                  parseInt(item.dataset.quantity) + 1
+                );
+                text.innerHTML =
+                  product.title +
+                  " " +
+                  product.price +
+                  " " +
+                  item.dataset.quantity;
+              }
+              orderButton.innerHTML = "Order " + getTotal();
+            };
+
+            del.onclick = () => {
+              if (parseInt(item.dataset.quantity) > 1) {
+                item.setAttribute(
+                  "data-quantity",
+                  parseInt(item.dataset.quantity) - 1
+                );
+                text.innerHTML =
+                  product.title +
+                  " " +
+                  product.price +
+                  " " +
+                  item.dataset.quantity;
+              } else {
+                cartContainer.removeChild(item);
+              }
+              orderButton.innerHTML = "Order " + getTotal();
+            };
+          }
+          orderButton.innerHTML = "Order " + getTotal();
+        };
+      });
+      orderButton.addEventListener("click", () => {
+        // Send Ajax
+        getTotal();
+      });
+    </script>
+  </body>
+</html>

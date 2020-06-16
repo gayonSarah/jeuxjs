@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma-rtl.min.css"
+    />
+  </head>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="500"
+      height="500"
+      style="border: 1px solid #000000;"
+    >
+    </canvas>
+    <div>Score : <span class="score"></span></div>
+    <script>
+      let snake = [
+        { x: 150, y: 150 },
+        { x: 140, y: 150 },
+        { x: 130, y: 150 },
+        { x: 120, y: 150 },
+        { x: 110, y: 150 },
+      ];
+      let apple = { x: randomTen(0, 500), y: randomTen(0, 500) };
+
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      const LEFT_KEY = 37;
+      const RIGHT_KEY = 39;
+      const UP_KEY = 38;
+      const DOWN_KEY = 40;
+      let score = 0;
+      let direction;
+
+      window.addEventListener("keydown", function (e) {
+        var key = e.keyCode ? e.keyCode : e.which;
+        if (e.keyCode == UP_KEY) {
+          direction = "UP";
+        } else if (e.keyCode == RIGHT_KEY) {
+          direction = "RIGTH";
+        } else if (e.keyCode == LEFT_KEY) {
+          direction = "LEFT";
+        } else if (e.keyCode == DOWN_KEY) {
+          direction = "DOWN";
+        }
+      });
+
+      function drawSnake() {
+        snake.forEach(function (element) {
+          ctx.fillStyle = "red";
+          ctx.strokestyle = "black";
+          ctx.fillRect(element.x, element.y, 10, 10);
+          ctx.strokeRect(element.x, element.y, 10, 10);
+        });
+      }
+      function randomTen(min, max) {
+        return Math.round((Math.random() * (max - min) + min) / 10) * 10;
+      }
+      function drawApple() {
+        ctx.fillStyle = "yellow";
+        ctx.strokestyle = "black";
+        ctx.fillRect(apple.x, apple.y, 10, 10);
+        ctx.strokeRect(apple.x, apple.y, 10, 10);
+      }
+      function moveSnake() {
+        let head;
+
+        if (direction == "UP") {
+          head = {
+            x: snake[0].x,
+            y: snake[0].y - 10,
+          };
+        } else if (direction == "DOWN") {
+          head = {
+            x: snake[0].x,
+            y: snake[0].y + 10,
+          };
+        } else if (direction == "LEFT") {
+          head = {
+            x: snake[0].x - 10,
+            y: snake[0].y,
+          };
+        } else if (direction == "RIGTH") {
+          head = {
+            x: snake[0].x + 10,
+            y: snake[0].y,
+          };
+        }
+
+        if (head) {
+          snake.unshift(head);
+          if (head.x == apple.x && head.y == apple.y) {
+            apple = { x: randomTen(0, 500), y: randomTen(0, 500) };
+            score = score + 1;
+            console.log(score);
+            console.log("hello");
+          } else {
+            snake.pop();
+          }
+        }
+        if (snake[0].x >= 500) {
+          snake[0].x = 0;
+        }
+        if (snake[0].y >= 500) {
+          snake[0].y = 0;
+        }
+        if (snake[0].x <= 0) {
+          snake[0].x = 500;
+        }
+        if (snake[0].y <= 0) {
+          snake[0].y = 500;
+        }
+      }
+
+      function loop() {
+        ctx.clearRect(0, 0, 500, 500);
+        drawSnake();
+        drawApple();
+        moveSnake();
+        setTimeout(loop, 150);
+      }
+      document.querySelector(".score").innerHTML = score;
+      setTimeout(loop, 150);
+    </script>
+  </body>
+</html>
