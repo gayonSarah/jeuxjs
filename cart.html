@@ -79,7 +79,7 @@
             cartContainer.insertBefore(item, orderButton.parentNode);
 
             addProduct.onclick = () => {
-              if (parseInt(item.dataset.quantity) > 1) {
+              if (parseInt(item.dataset.quantity) >= 1) {
                 item.setAttribute(
                   "data-quantity",
                   parseInt(item.dataset.quantity) + 1
