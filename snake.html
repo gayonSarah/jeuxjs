@@ -96,7 +96,7 @@
           snake.unshift(head);
           if (head.x == apple.x && head.y == apple.y) {
             apple = { x: randomTen(0, 500), y: randomTen(0, 500) };
-            score = score + 1;
+            score + 1;
             console.log(score);
             console.log("hello");
           } else {
@@ -116,6 +116,12 @@
           snake[0].y = 500;
         }
       }
+      function displayScore(){
+
+        document.querySelector(".score").innerHTML = score;
+        
+      }
+
 
       function loop() {
         ctx.clearRect(0, 0, 500, 500);
@@ -124,7 +130,7 @@
         moveSnake();
         setTimeout(loop, 150);
       }
-      document.querySelector(".score").innerHTML = score;
+     
       setTimeout(loop, 150);
     </script>
   </body>
